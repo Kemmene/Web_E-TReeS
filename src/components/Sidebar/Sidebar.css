@@ -1,0 +1,32 @@
+@reference "../../index.css"; 
+.sidebar-container {
+  @apply w-[260px] bg-navy-900 text-white min-h-screen flex flex-col justify-between p-4 fixed left-0 top-0 font-body z-20;
+}
+
+.sidebar-logo-box {
+  @apply w-10 h-10 bg-white rounded flex items-center justify-center text-navy-900 font-bold font-title text-xl shadow-sm;
+}
+
+.sidebar-brand-title {
+  @apply font-title font-bold text-base leading-tight tracking-wide;
+}
+
+.sidebar-brand-sub {
+  @apply text-xs text-gray-400;
+}
+
+.sidebar-action-btn {
+  @apply w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 mb-6 transition-colors shadow-sm;
+}
+
+.sidebar-nav-link {
+  @apply flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-gray-300 hover:bg-navy-800 hover:text-white;
+}
+
+.sidebar-nav-link-active {
+  @apply bg-teal-500 text-white font-bold shadow-sm;
+}
+
+.sidebar-footer-btn {
+  @apply w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white transition-colors;
+}

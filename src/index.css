@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Noto+Serif:wght@600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-navy-900: #16293D;
+  --color-navy-800: #2D3F54;
+  --color-teal-500: #39BBD0;
+  --color-teal-600: #006876;
+  --color-orange-500: #EE7F20;
+  --color-surface-bg: #F7F9FC;
+  --color-surface-card: #FFFFFF;
+  --color-surface-header: #ECF7FF;
+  --color-surface-border: #E5E7EB;
+  --font-title: 'Noto Serif', serif;
+  --font-body: 'Hanken Grotesk', sans-serif;
+  --width-sidebar: 260px;
+}
+
+body {
+  background-color: #F7F9FC;
+  font-family: 'Hanken Grotesk', sans-serif;
+  color: #191C1E;
+}

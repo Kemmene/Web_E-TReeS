@@ -1,0 +1,39 @@
+/* src/pages/Buses/Buses.css */
+@reference "../../index.css";
+
+.buses-page {
+     padding: 1.5rem; 
+}
+
+.buses-header {
+     display: flex; 
+     justify-content: space-between; 
+     align-items: center; 
+     margin-bottom: 1.5rem; 
+}
+
+.buses-title {
+     font-family: var(--font-title); 
+     font-size: 1.75rem; 
+     font-weight: 700; 
+     color: var(--color-navy-900); 
+}
+.buses-subtitle { color: #6b7280; font-size: 0.875rem; }
+.buses-add-btn { display: flex; align-items: center; gap: 0.5rem; background-color: var(--color-teal-600); color: white; padding: 0.625rem 1rem; border-radius: 0.5rem; font-weight: 500; cursor: pointer; border: none; }
+.buses-controls { margin-bottom: 1.5rem; }
+.buses-search-box { display: flex; align-items: center; gap: 0.5rem; background-color: var(--color-surface-card); border: 1px solid var(--color-surface-border); padding: 0.5rem 0.75rem; border-radius: 0.5rem; max-width: 400px; }
+.buses-search-box input { border: none; outline: none; width: 100%; background: transparent; font-size: 0.875rem; }
+
+.buses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.bus-card { background-color: var(--color-surface-card); border: 1px solid var(--color-surface-border); border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; justify-content: space-between; }
+.bus-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+.bus-plate { font-size: 1.25rem; font-weight: 700; color: var(--color-navy-900); font-family: monospace; }
+.bus-model { font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; }
+.bus-specs { display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid var(--color-surface-border); }
+.bus-card-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem; }
+
+.status-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+.status-badge.active { background-color: #d1fae5; color: #065f46; }
+.status-badge.maintenance { background-color: #fef3c7; color: #b45309; }
+.action-btn { background: transparent; border: none; padding: 0.25rem; border-radius: 0.25rem; cursor: pointer; color: #6b7280; }
+.action-btn.delete:hover { color: #dc2626; }

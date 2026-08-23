@@ -1,0 +1,25 @@
+@reference "../../index.css";
+
+.users-page { padding: 1.5rem; }
+.users-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.users-title { font-family: var(--font-title); font-size: 1.75rem; font-weight: 700; color: var(--color-navy-900); }
+.users-subtitle { color: #6b7280; font-size: 0.875rem; }
+.users-add-btn { display: flex; align-items: center; gap: 0.5rem; background-color: var(--color-teal-600); color: white; padding: 0.625rem 1rem; border-radius: 0.5rem; font-weight: 500; cursor: pointer; border: none; }
+.users-controls { margin-bottom: 1rem; }
+.users-search-box { display: flex; align-items: center; gap: 0.5rem; background-color: var(--color-surface-card); border: 1px solid var(--color-surface-border); padding: 0.5rem 0.75rem; border-radius: 0.5rem; max-width: 400px; }
+.users-search-box input { border: none; outline: none; width: 100%; background: transparent; font-size: 0.875rem; }
+
+.users-table-wrapper { background-color: var(--color-surface-card); border: 1px solid var(--color-surface-border); border-radius: 0.5rem; overflow: hidden; }
+.users-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
+.users-table th { background-color: var(--color-surface-header); padding: 0.75rem 1rem; color: var(--color-navy-900); font-weight: 600; border-bottom: 1px solid var(--color-surface-border); }
+.users-table td { padding: 0.875rem 1rem; border-bottom: 1px solid var(--color-surface-border); }
+.user-id-badge { background-color: #f3f4f6; padding: 0.2rem 0.5rem; border-radius: 0.25rem; font-family: monospace; font-weight: 600; color: var(--color-navy-900); }
+.user-info-cell { display: flex; flex-direction: column; gap: 0.1rem; }
+
+.status-badge { padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+.status-badge.active { background-color: #d1fae5; color: #065f46; }
+.status-badge.inactive { background-color: #fee2e2; color: #991b1b; }
+
+.actions-cell { display: flex; justify-content: flex-end; gap: 0.5rem; }
+.action-btn { background: transparent; border: none; padding: 0.25rem; border-radius: 0.25rem; cursor: pointer; color: #6b7280; }
+.action-btn.delete:hover { color: #dc2626; }

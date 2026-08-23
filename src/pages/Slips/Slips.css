@@ -1,0 +1,364 @@
+.slips-container {
+  padding: 1.5rem 2rem;
+  background-color: #f1f5f9;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #334155;
+  box-sizing: border-box;
+}
+
+/* En-tête */
+.slips-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.slips-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.2rem 0;
+}
+
+.slips-subtitle {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.slips-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Formatage compact et uniligne des boutons */
+.btn-filter-period,
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-filter-period {
+  background-color: #ffffff;
+  border: 1px solid #1e293b;
+  color: #1e293b;
+}
+
+.btn-export {
+  background-color: #3b82f6;
+  border: none;
+  color: #ffffff;
+}
+
+.btn-export:hover {
+  background-color: #2563eb;
+}
+
+/* Sélecteur de date intégré */
+.period-picker-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.period-picker-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.date-input-hidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.date-input-hidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.btn-clear-date {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 0.25rem;
+  margin-left: 0.25rem;
+}
+
+.btn-clear-date:hover {
+  color: #ef4444;
+}
+
+/* Grille des statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+}
+
+/* Grille des statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Carte Statistique de base */
+.stat-card {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Effets Hover sur les Cartes */
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+}
+
+.stat-card:hover .stat-icon-wrapper {
+  transform: scale(1.1);
+}
+
+/* Hover spécifique selon le type de carte */
+.stat-reservations:hover {
+  border-color: #22c55e;
+}
+
+.stat-retraits:hover {
+  border-color: #ef4444;
+}
+
+.stat-net:hover {
+  border-color: #0284c7;
+}
+
+/* État Sélectionné / Actif */
+.stat-card.active {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-reservations.active {
+  border: 1.5px solid #22c55e;
+  background-color: #f0fdf4;
+}
+
+.stat-retraits.active {
+  border: 1.5px solid #ef4444;
+  background-color: #fef2f2;
+}
+
+.stat-net.active {
+  border: 1.5px solid #0284c7;
+  background-color: #f0f9ff;
+}
+
+/* Icônes */
+.stat-icon-wrapper {
+  background-color: #f8fafc;
+  padding: 0.4rem;
+  border-radius: 0.375rem;
+  transition: transform 0.25s ease;
+}
+
+.text-green { color: #22c55e; }
+.text-red { color: #ef4444; }
+.text-blue { color: #0284c7; }
+
+.stat-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  display: block;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.03em;
+}
+
+.stat-value-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.stat-currency {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.stat-icon-wrapper {
+  background-color: #f8fafc;
+  padding: 0.4rem;
+  border-radius: 0.375rem;
+}
+
+.text-green { color: #22c55e; }
+.text-red { color: #ef4444; }
+.text-blue { color: #0284c7; }
+
+/* Tableau */
+.table-card {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+.table-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #475569;
+  margin: 0 0 1rem 0;
+}
+
+.slips-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.slips-table th {
+  background-color: #ffffff;
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  letter-spacing: 0.03em;
+}
+
+.slips-table td {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.825rem;
+}
+
+/* Style des lignes du tableau et animation au survol (Hover) */
+.slips-table tbody tr {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Effet Hover sur chaque ligne */
+.slips-table tbody tr:hover {
+  background-color: #f8fafc; 
+  transform: scale(1.002); 
+  box-shadow: inset 3px 0 0 #0284c7;
+}
+
+/* Changement de couleur des éléments lors du survol */
+.slips-table tbody tr:hover .description-cell span {
+  color: #0369a1;
+  font-weight: 600;
+}
+
+.slips-table tbody tr:hover .icon-box {
+  background-color: #ffffff;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.slips-table tbody tr:hover .amount-text {
+  color: #0369a1;
+}
+
+.description-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #0284c7;
+  font-weight: 500;
+}
+
+.icon-box {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.agence-cell {
+  color: #334155;
+}
+
+.sub-city {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.amount-text {
+  font-weight: 700;
+  color: #0284c7;
+}
+
+.payment-mode {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.status-success {
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.date-cell {
+  color: #64748b;
+}
+
+.empty-state {
+  text-align: center;
+  color: #94a3b8;
+  padding: 2rem 0;
+}
