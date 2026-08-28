@@ -8,7 +8,7 @@ import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip,
   BarChart, Bar, PieChart, Pie, Cell 
 } from 'recharts';
-import { useDashboard, useCreatePaymentDemand } from '../../../lib';
+import { useDashboard, useCreatePaymentDemand } from '@lib';
 import './Dashboard.css';
 
 const formatChartData = (diagrams: any) => {

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Pencil, Trash2, ShieldAlert, X, MapPin, Phone, Mail, Loader2 } from 'lucide-react';
-import { useAgencies, useCreateAgency, useUpdateAgency, useDeleteAgency } from '../../../lib';
+import { useAgencies, useCreateAgency, useUpdateAgency, useDeleteAgency } from '@lib';
 import './Agencies.css';
 
 export const AgenciesPage = () => {
