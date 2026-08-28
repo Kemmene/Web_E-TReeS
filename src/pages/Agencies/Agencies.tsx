@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Pencil, Trash2, ShieldAlert, X, MapPin, Phone, Mail } from 'lucide-react';
+import { Plus, Pencil, Trash2, ShieldAlert, X, MapPin, Phone, Mail, Loader2 } from 'lucide-react';
+import { useAgencies, useCreateAgency, useUpdateAgency, useDeleteAgency } from '../../../lib';
 import './Agencies.css';
-
-const initialAgencies = [
-  { id: 1, name: 'Agence Centrale', city: 'Douala', phone: '+237 690 00 00 01', email: 'douala@tresorvoyages.cm' },
-  { id: 2, name: 'Agence Yaoundé Nsam', city: 'Yaoundé', phone: '+237 690 00 00 02', email: 'yaounde@tresorvoyages.cm' },
-  { id: 3, name: 'Agence Bafoussam Ville', city: 'Bafoussam', phone: '+237 690 00 00 03', email: 'bafoussam@tresorvoyages.cm' },
-];
 
 export const AgenciesPage = () => {
   const navigate = useNavigate();
-  const [agencies, setAgencies] = useState(initialAgencies);
+  const { data: agenciesResponse, isLoading, error, refetch } = useAgencies(1, 50);
+  const createAgency = useCreateAgency();
+  const updateAgency = useUpdateAgency();
+  const deleteAgency = useDeleteAgency();
+
+  const agencies = agenciesResponse?.response || [];
 
   // État pour l'édition en Popover
   const [editingAgency, setEditingAgency] = useState(null);
@@ -48,29 +48,58 @@ export const AgenciesPage = () => {
       left: Math.min(rect.left + window.scrollX - 100, window.innerWidth - 320),
     });
 
-    setEditingAgency(agency.id);
+    setEditingAgency(agency.reference);
     setEditFormData({
       name: agency.name,
       phone: agency.phone,
-      email: agency.email,
-      city: agency.city,
+      email: agency.email || '',
+      city: agency.city?.name || '',
     });
   };
 
   // Enregistrer les modifications
-  const handleSaveEdit = (e) => {
+  const handleSaveEdit = async (e) => {
     e.preventDefault();
-    setAgencies((prev) =>
-      prev.map((item) => (item.id === editingAgency ? { ...item, ...editFormData } : item))
-    );
-    setEditingAgency(null);
+    if (!editingAgency) return;
+    
+    try {
+      await updateAgency.mutateAsync({ ref: editingAgency, data: editFormData });
+      refetch();
+      setEditingAgency(null);
+    } catch (err) {
+      alert('Erreur lors de la mise à jour');
+    }
   };
 
   // Confirmer la suppression
-  const handleConfirmDelete = () => {
-    setAgencies((prev) => prev.filter((item) => item.id !== deletingAgencyId));
-    setDeletingAgencyId(null);
+  const handleConfirmDelete = async () => {
+    if (!deletingAgencyId) return;
+    
+    try {
+      await deleteAgency.mutateAsync(deletingAgencyId);
+      refetch();
+      setDeletingAgencyId(null);
+    } catch (err) {
+      alert('Erreur lors de la suppression');
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="agencies-container flex items-center justify-center h-screen">
+        <Loader2 className="w-10 h-10 animate-spin text-teal-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="agencies-container p-8 text-center">
+        <p className="text-red-500">Erreur de chargement des agences</p>
+        <button onClick={() => refetch()} className="mt-4 btn-primary">Réessayer</button>
+      </div>
+    );
+  }
 
   return (
     <div className="agencies-container">
@@ -88,7 +117,7 @@ export const AgenciesPage = () => {
 
       <div className="agencies-grid">
         {agencies.map((agency) => (
-          <div key={agency.id} className="agency-card">
+          <div key={agency.reference} className="agency-card">
             <div className="agency-card-header">
               <h3>{agency.name}</h3>
               <div className="agency-actions">
@@ -102,7 +131,7 @@ export const AgenciesPage = () => {
                 <button
                   className="icon-btn delete-btn"
                   title="Supprimer"
-                  onClick={() => setDeletingAgencyId(agency.id)}
+                  onClick={() => setDeletingAgencyId(agency.reference)}
                 >
                   <Trash2 size={16} />
                 </button>
@@ -112,7 +141,7 @@ export const AgenciesPage = () => {
             <div className="agency-card-body">
               <div className="info-item">
                 <MapPin size={16} />
-                <span>{agency.city}</span>
+                <span>{agency.city?.name || 'N/A'}</span>
               </div>
               <div className="info-item">
                 <Phone size={16} />
@@ -120,7 +149,7 @@ export const AgenciesPage = () => {
               </div>
               <div className="info-item">
                 <Mail size={16} />
-                <span>{agency.email}</span>
+                <span>{agency.email || 'N/A'}</span>
               </div>
             </div>
           </div>
@@ -186,8 +215,8 @@ export const AgenciesPage = () => {
               />
             </div>
 
-            <button type="submit" className="save-popover-btn">
-              Enregistrer
+            <button type="submit" className="save-popover-btn" disabled={updateAgency.isPending}>
+              {updateAgency.isPending ? 'Enregistrement...' : 'Enregistrer'}
             </button>
           </form>
         </div>
@@ -209,8 +238,8 @@ export const AgenciesPage = () => {
                 <button className="btn-cancel" onClick={() => setDeletingAgencyId(null)}>
                   Annuler
                 </button>
-                <button className="btn-delete-danger" onClick={handleConfirmDelete}>
-                  Supprimer
+                <button className="btn-delete-danger" onClick={handleConfirmDelete} disabled={deleteAgency.isPending}>
+                  {deleteAgency.isPending ? 'Suppression...' : 'Supprimer'}
                 </button>
               </div>
             </div>

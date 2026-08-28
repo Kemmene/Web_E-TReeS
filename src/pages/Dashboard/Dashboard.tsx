@@ -1,74 +1,116 @@
 import React, { useState } from 'react';
 import { 
   Calendar, TrendingUp, Smartphone, Users, Bus, 
-  MoreVertical, FileText, ChevronRight, ArrowDownRight, X, ShieldAlert, Clock
+  MoreVertical, FileText, ChevronRight, ArrowDownRight, X, ShieldAlert, Clock,
+  Loader2
 } from 'lucide-react';
 import { 
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip,
   BarChart, Bar, PieChart, Pie, Cell 
 } from 'recharts';
+import { useDashboard, useCreatePaymentDemand } from '../../../lib';
 import './Dashboard.css';
 
-const turnoverData = [
-  { day: '1', val: 450 }, { day: '2', val: 120 }, { day: '3', val: 390 },
-  { day: '4', val: 250 }, { day: '5', val: 320 }, { day: '6', val: 180 },
-  { day: '7', val: 290 }, { day: '8', val: 150 }, { day: '9', val: 480 },
-  { day: '10', val: 310 }, { day: '11', val: 300 }, { day: '12', val: 90 },
-  { day: '13', val: 380 }, { day: '14', val: 220 }, { day: '15', val: 300 },
-  { day: '16', val: 280 }, { day: '17', val: 130 }, { day: '18', val: 320 },
-  { day: '19', val: 110 }, { day: '20', val: 290 }, { day: '21', val: 380 },
-  { day: '22', val: 250 }, { day: '23', val: 120 }, { day: '24', val: 210 },
-  { day: '25', val: 440 }, { day: '26', val: 110 }, { day: '27', val: 160 },
-  { day: '28', val: 140 }, { day: '29', val: 410 }, { day: '30', val: 350 }
-];
+const formatChartData = (diagrams: any) => {
+  if (!diagrams) return [];
+  return diagrams.booking_period?.map((d: any) => ({ day: d.label, val: d.value })) || [];
+};
 
-const bookingTrendsData = [
-  { day: 'Mon', count: 120 },
-  { day: 'Tue', count: 135 },
-  { day: 'Wed', count: 110 },
-  { day: 'Thu', count: 190 },
-  { day: 'Fri', count: 250 },
-  { day: 'Sat', count: 280 },
-  { day: 'Sun', count: 270 }
-];
+const formatCategoryData = (diagrams: any) => {
+  if (!diagrams) return [];
+  return diagrams.booking_category?.map((d: any) => ({ name: d.label, value: d.value, color: d.color })) || [
+    { name: 'Classique', value: 45, color: '#39BBD0' },
+    { name: 'VIP', value: 30, color: '#16293D' },
+    { name: 'Prestige', value: 25, color: '#EE7F20' }
+  ];
+};
 
-const categoryData = [
-  { name: 'Classique', value: 45, color: '#39BBD0' },
-  { name: 'VIP', value: 30, color: '#16293D' },
-  { name: 'Prestige', value: 25, color: '#EE7F20' }
-];
+const formatBookingTrends = (diagrams: any) => {
+  if (!diagrams) return [];
+  return diagrams.booking_period?.map((d: any) => ({ day: d.label, count: d.value })) || [
+    { day: 'Mon', count: 120 },
+    { day: 'Tue', count: 135 },
+    { day: 'Wed', count: 110 },
+    { day: 'Thu', count: 190 },
+    { day: 'Fri', count: 250 },
+    { day: 'Sat', count: 280 },
+    { day: 'Sun', count: 270 }
+  ];
+};
 
 export const DashboardPage = () => {
   const [trendView, setTrendView] = useState('monthly');
   const [selectedDate, setSelectedDate] = useState('');
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-
-  const [agency, setAgency] = useState('Agence Centrale - Douala');
   const [withdrawSource, setWithdrawSource] = useState('momo');
   const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [agency, setAgency] = useState('');
 
-  const balances = {
-    momo: 250000,
-    om: 180000,
-    card: 95000
-  };
+  const { data: dashboard, isLoading, error, refetch } = useDashboard();
+  const createPaymentDemand = useCreatePaymentDemand();
 
   const handleMaxClick = () => {
+    const balances = dashboard ? {
+      momo: dashboard.momo_balance,
+      om: dashboard.om_balance,
+      card: dashboard.card_balance,
+    } : { momo: 0, om: 0, card: 0 };
     setWithdrawAmount(balances[withdrawSource] || 0);
   };
 
-  const handleSubmitWithdrawal = (e) => {
+  const handleSubmitWithdrawal = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Demande de retrait de ${withdrawAmount} FCFA via ${withdrawSource.toUpperCase()} envoyée avec succès.`);
-    setIsWithdrawModalOpen(false);
-    setWithdrawAmount('');
+    if (!dashboard) return;
+    
+    try {
+      await createPaymentDemand.mutateAsync({
+        amount: parseInt(withdrawAmount),
+        payment_method: withdrawSource as 'momo' | 'om' | 'card',
+        payment_destination: agency,
+      });
+      alert(`Demande de retrait de ${withdrawAmount} FCFA via ${withdrawSource.toUpperCase()} envoyée avec succès.`);
+      setIsWithdrawModalOpen(false);
+      setWithdrawAmount('');
+      refetch();
+    } catch (err) {
+      alert('Erreur lors de la demande de retrait');
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="dashboard-container flex items-center justify-center h-screen">
+        <Loader2 className="w-10 h-10 animate-spin text-teal-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-container p-8 text-center">
+        <p className="text-red-500">Erreur de chargement du tableau de bord</p>
+        <button onClick={() => refetch()} className="mt-4 btn-primary">Réessayer</button>
+      </div>
+    );
+  }
+
+  const balances = dashboard ? {
+    momo: dashboard.momo_balance,
+    om: dashboard.om_balance,
+    card: dashboard.card_balance,
+  } : { momo: 0, om: 0, card: 0 };
+
+  const turnoverData = formatChartData(dashboard?.diagrams);
+  const categoryData = formatCategoryData(dashboard?.diagrams);
+  const bookingTrendsData = formatBookingTrends(dashboard?.diagrams);
+
+  const userName = 'Utilisateur';
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
         <div>
-          <h1 className="dashboard-title">Bonjour, ROSY</h1>
+          <h1 className="dashboard-title">Bonjour, {userName}</h1>
           <p className="dashboard-subtitle">Voici un aperçu de vos opérations aujourd'hui.</p>
         </div>
 
@@ -143,7 +185,7 @@ export const DashboardPage = () => {
             </div>
           </div>
           <div className="mt-3">
-            <h3 className="kpi-value">0</h3>
+            <h3 className="kpi-value">{dashboard?.total_bookings || 0}</h3>
             <p className="kpi-subtext">Réservations du jour</p>
           </div>
         </div>
@@ -156,7 +198,7 @@ export const DashboardPage = () => {
             </div>
           </div>
           <div className="mt-3">
-            <h3 className="kpi-value">0</h3>
+            <h3 className="kpi-value">{dashboard?.total_passengers || 0}</h3>
             <p className="kpi-subtext">Total enregistrés</p>
           </div>
         </div>
@@ -169,7 +211,7 @@ export const DashboardPage = () => {
             </div>
           </div>
           <div className="mt-3">
-            <h3 className="kpi-value">0</h3>
+            <h3 className="kpi-value">{dashboard?.total_travels || 0}</h3>
             <p className="kpi-subtext">Trajets actifs</p>
           </div>
         </div>
@@ -185,7 +227,7 @@ export const DashboardPage = () => {
           </div>
           <div className="h-64 w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={turnoverData}>
+              <LineChart data={turnoverData.length > 0 ? turnoverData : [{ day: '1', val: 0 }]}>
                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#9CA3AF' }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#9CA3AF' }} tickFormatter={(v) => `${v}k`} />
                 <Tooltip />
@@ -272,12 +314,29 @@ export const DashboardPage = () => {
             </button>
           </div>
 
-          <div className="empty-state">
-            <div className="empty-icon-circle">
-              <FileText size={28} />
+          {dashboard?.transactions && dashboard.transactions.length > 0 ? (
+            <div className="space-y-3">
+              {dashboard.transactions.slice(0, 5).map((tx: any) => (
+                <div key={tx.reference} className="flex justify-between items-center py-2 border-b border-surface-border">
+                  <div>
+                    <p className="font-medium text-sm">{tx.title}</p>
+                    <p className="text-xs text-gray-500">{tx.agency?.name} - {tx.payment_method}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-teal-500">{tx.amount.toLocaleString()} FCFA</p>
+                    <p className="text-xs text-gray-500 capitalize">{tx.status?.toLowerCase()}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <p className="font-title font-bold text-navy-900 text-base">Aucune transaction pour le moment</p>
-          </div>
+          ) : (
+            <div className="empty-state">
+              <div className="empty-icon-circle">
+                <FileText size={28} />
+              </div>
+              <p className="font-title font-bold text-navy-900 text-base">Aucune transaction pour le moment</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -302,12 +361,15 @@ export const DashboardPage = () => {
 
               <div className="form-group">
                 <label>Agence</label>
-                <input 
-                  type="text" 
+                <select 
                   value={agency} 
                   onChange={(e) => setAgency(e.target.value)}
                   required 
-                />
+                >
+                  {dashboard?.agencies?.map((a: any) => (
+                    <option key={a.reference} value={a.reference}>{a.name}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-group">
@@ -355,8 +417,8 @@ export const DashboardPage = () => {
                 >
                   Annuler
                 </button>
-                <button type="submit" className="btn-primary">
-                  Valider le retrait
+                <button type="submit" className="btn-primary" disabled={createPaymentDemand.isPending}>
+                  {createPaymentDemand.isPending ? 'Traitement...' : 'Valider le retrait'}
                 </button>
               </div>
             </form>
